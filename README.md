@@ -1,1 +1,3 @@
-# ganymede
+# gaia
+
+infrastructure repo

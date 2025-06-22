@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: "AWS::Serverless-2016-10-31"
+Description: infrastructure cloudformation script
+    
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+      Timeout: 30  # in seconds
+Parameters:
+  Project:
+    Type: String
+  TargetEnvr:
+    Type: String
+Resources:
+  ########################################
+  ##### AWS RDS and related services #####
+  ########################################
+  RdsSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupName: !Sub ${Project}-${TargetEnvr}-subnet-group
+      DBSubnetGroupDescription: Subnet Group
+      SubnetIds:
+      - subnet-0608d15aefe1735ec
+      - subnet-0deab5ad0e63af50d
+      - subnet-03ac3380f6870bb72
+  RdsDatabase:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: mysql
+      EngineVersion: 8.4.5
+      MultiAZ: false
+      DBInstanceIdentifier: !Sub ${Project}-${TargetEnvr}
+      MasterUsername: admin
+      MasterUserPassword: temp12345678
+      DBInstanceClass: db.t4g.micro
+      StorageType: gp2
+      AllocatedStorage: 20
+      PubliclyAccessible: true
+      DBSubnetGroupName: !Ref RdsSubnetGroup
+Outputs:
+  DbEndpoint:
+    Value: !GetAtt RdsDatabase.Endpoint.Address
+    Export:
+      Name: !Sub ${Project}-${TargetEnvr}-db-endpoint
+  DbPort:
+    Value: !GetAtt RdsDatabase.Endpoint.Port
+    Export:
+      Name: !Sub ${Project}-${TargetEnvr}-db-port
+  DbUsername:
+    Value: admin
+    Export:
+      Name: !Sub ${Project}-${TargetEnvr}-db-username
