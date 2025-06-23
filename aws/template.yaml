@@ -7,8 +7,6 @@ Globals:
   Function:
       Timeout: 30  # in seconds
 Parameters:
-  Project:
-    Type: String
   TargetEnvr:
     Type: String
 Resources:
@@ -18,7 +16,7 @@ Resources:
   RdsSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
-      DBSubnetGroupName: !Sub ${Project}-${TargetEnvr}-subnet-group
+      DBSubnetGroupName: !Sub celestial-studio-${TargetEnvr}-subnet-group
       DBSubnetGroupDescription: Subnet Group
       SubnetIds:
       - subnet-0608d15aefe1735ec
@@ -30,7 +28,7 @@ Resources:
       Engine: mysql
       EngineVersion: 8.4.5
       MultiAZ: false
-      DBInstanceIdentifier: !Sub ${Project}-${TargetEnvr}
+      DBInstanceIdentifier: !Sub celestial-studio-${TargetEnvr}
       MasterUsername: admin
       MasterUserPassword: temp12345678
       DBInstanceClass: db.t4g.micro
@@ -38,16 +36,27 @@ Resources:
       AllocatedStorage: 20
       PubliclyAccessible: true
       DBSubnetGroupName: !Ref RdsSubnetGroup
+  #######################
+  ######### SQS #########
+  #######################
+  PolarisLoggerQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub polaris-${TargetEnvr}-logger-queue
 Outputs:
   DbEndpoint:
     Value: !GetAtt RdsDatabase.Endpoint.Address
     Export:
-      Name: !Sub ${Project}-${TargetEnvr}-db-endpoint
+      Name: !Sub celestial-studio-${TargetEnvr}-db-endpoint
   DbPort:
     Value: !GetAtt RdsDatabase.Endpoint.Port
     Export:
-      Name: !Sub ${Project}-${TargetEnvr}-db-port
+      Name: !Sub celestial-studio-${TargetEnvr}-db-port
   DbUsername:
     Value: admin
     Export:
-      Name: !Sub ${Project}-${TargetEnvr}-db-username
+      Name: !Sub celestial-studio-${TargetEnvr}-db-username
+  PolarisLoggerQueueArn:
+    Value: !GetAtt PolarisLoggerQueue.Arn
+    Export:
+      Name: !Sub altarf-${TargetEnvr}-logger-queue-arn
