@@ -59,4 +59,4 @@ Outputs:
   PolarisLoggerQueueArn:
     Value: !GetAtt PolarisLoggerQueue.Arn
     Export:
-      Name: !Sub altarf-${TargetEnvr}-logger-queue-arn
+      Name: !Sub polaris-${TargetEnvr}-logger-queue-arn
