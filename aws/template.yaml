@@ -28,9 +28,9 @@ Resources:
       Engine: mysql
       EngineVersion: 8.4.5
       MultiAZ: false
-      DBInstanceIdentifier: !Sub celestial-studio-${TargetEnvr}
+      DBInstanceIdentifier: !Sub celestial-studio-mysql-${TargetEnvr}
       MasterUsername: admin
-      MasterUserPassword: temp12345678
+      MasterUserPassword: !Sub '{{resolve:ssm:mysql-${TargetEnvr}-admin-pwd}}'
       DBInstanceClass: db.t4g.micro
       StorageType: gp2
       AllocatedStorage: 20
@@ -48,14 +48,6 @@ Outputs:
     Value: !GetAtt RdsDatabase.Endpoint.Address
     Export:
       Name: !Sub celestial-studio-${TargetEnvr}-db-endpoint
-  DbPort:
-    Value: !GetAtt RdsDatabase.Endpoint.Port
-    Export:
-      Name: !Sub celestial-studio-${TargetEnvr}-db-port
-  DbUsername:
-    Value: admin
-    Export:
-      Name: !Sub celestial-studio-${TargetEnvr}-db-username
   PolarisLoggerQueueArn:
     Value: !GetAtt PolarisLoggerQueue.Arn
     Export:
