@@ -52,3 +52,7 @@ Outputs:
     Value: !GetAtt PolarisLoggerQueue.Arn
     Export:
       Name: !Sub polaris-${TargetEnvr}-logger-queue-arn
+  PolarisLoggerQueueUrl:
+    Value: !GetAtt PolarisLoggerQueue.QueueUrl
+    Export:
+      Name: !Sub polaris-${TargetEnvr}-logger-queue-url
