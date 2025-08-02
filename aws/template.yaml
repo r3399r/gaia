@@ -43,6 +43,7 @@ Resources:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: !Sub polaris-${TargetEnvr}-logger-queue
+      ReceiveMessageWaitTimeSeconds: 20
 Outputs:
   DbEndpoint:
     Value: !GetAtt RdsDatabase.Endpoint.Address
